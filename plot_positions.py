@@ -100,6 +100,7 @@ def plot_positions(pos_file_name, rate_to_plot = 100, save_figure=True, show_plo
                 if plot_frame:
                     print_(" >> Plotting frame %i at %s ms; line %i: %s...\n"%(num_plotted_frames,t_ms,index,line))
                     ax.plot(xs,ys,'.', markersize=1)
+                    ax.axis('equal')
                     num_plotted_frames+=1
                     if num_plotted_frames%3 == 1:
                         time = '%sms'%t_ms if not t_ms==int(t_ms) else '%sms'%int(t_ms)
