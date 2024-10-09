@@ -12,20 +12,28 @@ plotter = None
 colours = {1.1: "lightblue", 2.1: "green", 2.2: "turquoise", 3: "#eeeeee"}
 colours = {1.1: "blue", 2.2: "turquoise"}
 
+log_step = None
+time_step = None
+slider = None
 
 def create_mesh(step):
     step_count = step
     value = step_count
     global last_mesh, all_points, all_point_types, plotter
+    global log_step
+    global time_step
+    global slider
 
     index = int(value)
+    timeindex_offset = 1
+    time_ms = (index+timeindex_offset)*log_step*time_step*1000
 
     curr_points = all_points[index]
     curr_types = all_point_types[index]
 
     print(
-        "Changing to time point: %s (%s), displaying %i points "
-        % (index, value, len(curr_points))
+        "Changing to time %g ms, step: %s (%s), displaying %i points "
+        % (time_ms, index, value, len(curr_points))
     )
 
     if last_mesh is None:
@@ -51,6 +59,9 @@ def create_mesh(step):
 
 def replay_simulation(position_file):
     global last_mesh, all_points, all_point_types, plotter
+    global log_step
+    global time_step
+    global slider
 
     points = []
     types = []
@@ -62,8 +73,6 @@ def replay_simulation(position_file):
     all_point_types = []
 
     time_count = 0
-
-    log_step = None
 
     include_boundary = False
 
@@ -140,9 +149,11 @@ def replay_simulation(position_file):
     create_mesh(0)
 
     max_time = len(all_points) - 1
-    plotter.add_slider_widget(
+
+    slider = plotter.add_slider_widget(
         create_mesh, rng=[0, max_time], value=max_time, title="Time point"
     )
+
     plotter.add_timer_event(
         max_steps=len(all_points), duration=200, callback=create_mesh
     )
