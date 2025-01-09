@@ -172,7 +172,7 @@ def plot_muscle_activity(muscle_file_name, dt, logstep, save_figure=True, show_p
     fig, ax0 = plt.subplots(4, sharex=True, sharey=True)
 
     info = "Muscle activation values per quadrant"
-    fig.canvas.set_window_title(info)
+    fig.canvas.manager.set_window_title(info)
 
     ax0[0].set_title('Muscle activation values per quadrant - '+quadrant0, size='small')
     ax0[0].set_ylabel('muscle #')
