@@ -91,7 +91,7 @@ jobs:
         pip install neuron
         pip list
         which nrniv
-        export NEURON_HOME=$pythonLocation
+        export NEURON_HOME=/home/runner/.local
         ./run_all_tests.sh 
 
     - name: Final version info
