@@ -9,7 +9,7 @@ import math
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-script_version = '0.1.5' # This will change at different rate to C++ code...
+script_version = '0.1.7' # This will change at different rate to C++ code...
 
 DEFAULTS = {'duration': 2.0,
             'dt': 0.005,
@@ -326,7 +326,7 @@ def run(a=None,**kwargs):
 
     command = './Release/Sibernetic %s -f %s -no_g -l_to lpath=%s timelimit=%s timestep=%s logstep=%s device=%s'%('' if a.noc302 else '-c302', a.configuration, sim_dir, a.duration/1000.0, a.dt/1000, a.logstep, a.device)
 
-    env = { "DISPLAY": os.environ.get('DISPLAY'),
+    env = { "DISPLAY": os.environ.get('DISPLAY') if os.environ.get('DISPLAY') is not None else '',
             "XAUTHORITY": os.environ.get('XAUTHORITY') if os.environ.get('XAUTHORITY') is not None else '',
             "PYTHONPATH": ".:%s:%s" % (os.environ.get('PYTHONPATH', '.'), os.path.abspath(sim_dir))}
 
@@ -334,7 +334,9 @@ def run(a=None,**kwargs):
 
     reportj = {}
 
-    completion_status = 'Completed successfully'
+    SUCCESS = 'Completed successfully'
+    completion_status = SUCCESS
+
     announce("Executing main Sibernetic simulation of %sms using: \n\n    %s \n\n  in %s with %s"%(a.duration, command, run_dir, env))
     try:
         pynml.execute_command_in_dir_with_realtime_output(command, run_dir, prefix="Sibernetic: ", env=env, verbose=True)
@@ -346,6 +348,9 @@ def run(a=None,**kwargs):
         completion_status = 'Error during simulation'
 
     reportj['completion_status'] = completion_status
+
+    successful = completion_status == SUCCESS
+
     sim_end = time.time()
 
 
@@ -403,7 +408,7 @@ def run(a=None,**kwargs):
         report_file.write(s)
 
 
-    if not a.noc302:
+    if not a.noc302 and successful:
 
         announce("Generating images for neuronal activity...")
 
@@ -430,27 +435,31 @@ def run(a=None,**kwargs):
     #    time.sleep(2)
     #plot_positions(pos_file_name,rate_to_plot = int(a.duration/5), show_plot=False)
 
-    from plot_positions import plot_muscle_activity
-    musc_act_file = os.path.join(sim_dir, 'muscles_activity_buffer.txt')
-    plot_muscle_activity(musc_act_file,a.dt,a.logstep, show_plot=False)
+    if successful:
+        from plot_positions import plot_muscle_activity
+        musc_act_file = os.path.join(sim_dir, 'muscles_activity_buffer.txt')
+        plot_muscle_activity(musc_act_file,a.dt,a.logstep, show_plot=False)
 
-    from wcon.generate_wcon import generate_wcon
+        from wcon.generate_wcon import generate_wcon
 
-    num_steps = int(a.duration/a.dt)
-    num_steps_logged = num_steps/a.logstep
-    rate = max(1,int(num_steps_logged/20.0))
-    #print("%s, %s"%(num_steps, rate))
-    generate_wcon(os.path.join(sim_dir, 'worm_motion_log.txt'),
-                  os.path.join(sim_dir, 'worm_motion_log.wcon'),
-                  rate_to_plot=rate,
-                  plot=False,
-                  save_figure1_to=os.path.join(sim_dir, 'worm_motion_1.png'),
-                  save_figure2_to=os.path.join(sim_dir, 'worm_motion_2.png'),
-                  save_figure3_to=os.path.join(sim_dir, 'worm_motion_3.png'))
+        num_steps = int(a.duration/a.dt)
+        num_steps_logged = num_steps/a.logstep
+        rate = max(1,int(num_steps_logged/20.0))
+        #print("%s, %s"%(num_steps, rate))
+        generate_wcon(os.path.join(sim_dir, 'worm_motion_log.txt'),
+                    os.path.join(sim_dir, 'worm_motion_log.wcon'),
+                    rate_to_plot=rate,
+                    plot=False,
+                    save_figure1_to=os.path.join(sim_dir, 'worm_motion_1.png'),
+                    save_figure2_to=os.path.join(sim_dir, 'worm_motion_2.png'),
+                    save_figure3_to=os.path.join(sim_dir, 'worm_motion_3.png'))
+    
+
     run_dur_sec = sim_end-sim_start
-    announce("Finished run in %s sec (%s hours)!\n\nSimulation saved in: %s\n\n"%(run_dur_sec,run_dur_sec/3600.0,sim_dir) + \
+    announce("Finished run in %s sec (%s hours)!\n\n"%(run_dur_sec,run_dur_sec/3600.0)+ \
+             ("Simulation output saved in: %s\n\n"%(sim_dir) if successful else 'SIMULATION UNSUCCESSFUL!\n\n') + \
              "Report of simulation at: %s/report.json\n\n"%(sim_dir)+ \
-             "Replay recorded simulation with: ./Release/Sibernetic -l_from lpath=%s\n"%(sim_dir))
+             ("Replay recorded simulation with: ./Release/Sibernetic -l_from lpath=%s\n"%(sim_dir) if successful else ''))
 
 
     if a.test:

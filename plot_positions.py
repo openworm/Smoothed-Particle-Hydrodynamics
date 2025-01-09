@@ -100,6 +100,7 @@ def plot_positions(pos_file_name, rate_to_plot = 100, save_figure=True, show_plo
                 if plot_frame:
                     print_(" >> Plotting frame %i at %s ms; line %i: %s...\n"%(num_plotted_frames,t_ms,index,line))
                     ax.plot(xs,ys,'.', markersize=1)
+                    ax.axis('equal')
                     num_plotted_frames+=1
                     if num_plotted_frames%3 == 1:
                         time = '%sms'%t_ms if not t_ms==int(t_ms) else '%sms'%int(t_ms)
@@ -171,7 +172,7 @@ def plot_muscle_activity(muscle_file_name, dt, logstep, save_figure=True, show_p
     fig, ax0 = plt.subplots(4, sharex=True, sharey=True)
 
     info = "Muscle activation values per quadrant"
-    fig.canvas.set_window_title(info)
+    fig.canvas.manager.set_window_title(info)
 
     ax0[0].set_title('Muscle activation values per quadrant - '+quadrant0, size='small')
     ax0[0].set_ylabel('muscle #')

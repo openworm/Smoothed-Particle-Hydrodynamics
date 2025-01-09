@@ -194,8 +194,9 @@ class C302NRNSimulation():
             try:
                 val = getattr(self.h, var)[0].soma.cai
             except AttributeError as e:
-                print(e)
+                print("Problem passing neuronal output of %s to muscle in Sibernetic: %s"%(var, e))
                 continue
+                val = 0
             scaled_val = self._scale(val)
             values.append(scaled_val)
             vars_read.append(var)
@@ -206,7 +207,8 @@ class C302NRNSimulation():
             try:
                 val = getattr(self.h, var)[0].soma.cai
             except AttributeError as e:
-                print(e)
+                print("Problem passing neuronal output of %s to muscle in Sibernetic: %s"%(var, e))
+                val = 0
                 continue
             scaled_val = self._scale(val)
             values.append(scaled_val)
@@ -216,7 +218,13 @@ class C302NRNSimulation():
             try:
                 val = getattr(self.h, var)[0].soma.cai
             except AttributeError as e:
-                print(e)
+                if var=='a_MVL24':
+                    extra = "Note: not an issue as no muscle MVL24 in the real C. elegans"
+                else:
+                    extra = ''
+                print("Problem passing output of %s to muscle in Sibernetic: %s %s"%(var, e, extra))
+
+                val = 0
                 continue
             scaled_val = self._scale(val)
             values.append(scaled_val)
@@ -226,7 +234,8 @@ class C302NRNSimulation():
             try:
                 val = getattr(self.h, var)[0].soma.cai
             except AttributeError as e:
-                print(e)
+                print("Problem passing neuronal output of %s to muscle in Sibernetic: %s"%(var, e))
+                val = 0
                 continue
             scaled_val = self._scale(val)
             values.append(scaled_val)

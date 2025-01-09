@@ -232,7 +232,7 @@ def generate_wcon(pos_file_name,
 
     plt.xlabel("x direction")
     plt.ylabel("y direction")
-    fig.canvas.set_window_title(info)
+    fig.canvas.manager.set_window_title(info)
     plt.title(info)
 
     if save_figure1_to:
@@ -240,7 +240,7 @@ def generate_wcon(pos_file_name,
 
     fig = plt.figure()
     info = "Speed of worm in x (lateral) & y (along body) directions"
-    fig.canvas.set_window_title(info)
+    fig.canvas.manager.set_window_title(info)
     plt.title(info)
     plt.xlabel("Time (s)")
     plt.ylabel("Speed")
@@ -274,7 +274,7 @@ def generate_wcon(pos_file_name,
     ax = plt.gca();
 
     info = "Propagation of curvature along body of worm (180=straight)"
-    fig.canvas.set_window_title(info)
+    fig.canvas.manager.set_window_title(info)
     plt.title(info)
 
     xt = ax.get_xticks()
@@ -372,7 +372,7 @@ if __name__ == '__main__':
 
         fig = plt.figure()
         info = "Pos at %sms"%t
-        fig.canvas.set_window_title(info)
+        fig.canvas.manager.set_window_title(info)
         plt.title(info)
 
         mx = y[t]
