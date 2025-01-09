@@ -88,7 +88,10 @@ jobs:
     - name: Run tests
       run: |
         pip install c302
+        pip install neuron
         pip list
+        which nrniv
+        export NEURON_HOME=$pythonLocation
         ./run_all_tests.sh 
 
     - name: Final version info
