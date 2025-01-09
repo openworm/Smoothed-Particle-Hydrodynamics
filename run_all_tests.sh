@@ -1,6 +1,6 @@
 #This script will run a number of tests using sibernetic_c302.py & check the 
 # files produced
-set -e
+set -ex
 
 # No c302
 python sibernetic_c302.py -test -noc302 -duration 0.1

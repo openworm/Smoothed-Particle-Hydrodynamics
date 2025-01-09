@@ -85,6 +85,12 @@ jobs:
 
         ./Release/Sibernetic -no_g timelimit=0.001
 
+    - name: Run tests
+      run: |
+        pip install c302
+        pip list
+        ./run_all_tests.sh 
+
     - name: Final version info
       run: |
         
