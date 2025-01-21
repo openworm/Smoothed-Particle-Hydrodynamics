@@ -328,7 +328,8 @@ def run(a=None,**kwargs):
 
     env = { "DISPLAY": os.environ.get('DISPLAY') if os.environ.get('DISPLAY') is not None else '',
             "XAUTHORITY": os.environ.get('XAUTHORITY') if os.environ.get('XAUTHORITY') is not None else '',
-            "PYTHONPATH": ".:%s:%s" % (os.environ.get('PYTHONPATH', '.'), os.path.abspath(sim_dir))}
+            "PYTHONPATH": ".:%s:%s" % (os.environ.get('PYTHONPATH', '.'), os.path.abspath(sim_dir)),
+            "NEURON_MODULE_OPTIONS": "-nogui"}
 
     sim_start = time.time()
 

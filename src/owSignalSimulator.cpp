@@ -80,37 +80,62 @@ SignalSimulator::SignalSimulator(const std::string &simFileName,
 
   // Import the file as a Python module.
   pModule = PyImport_Import(pName);
-  std::cout << "1111" << std::endl;
+  std::cout << "1) Py module "<< s <<" imported..." << std::endl;
   if (PyErr_Occurred())
     PyErr_Print();
 
-  std::cout << "222" << std::endl;
+    PyObject *pModule2 = PyImport_Import(PyUnicode_FromString("sys"));
+  if (PyErr_Occurred())
+    PyErr_Print();
+
+
+  std::cout << "2) all good" << std::endl;
   // Build the name of a callable class
   if (pModule != nullptr) {
-  std::cout << "333" << std::endl;
+  std::cout << "3) class: " << simClassName << std::endl;
     pClass = PyObject_GetAttrString(pModule, simClassName.c_str());
     if (PyErr_Occurred())
       PyErr_Print();
   } else {
 
-  std::cout << "444" << std::endl;
+  std::cout << "4) Good..." << std::endl;
     throw std::runtime_error("Python module not loaded, have you set "
                              "PYTHONPATH?\nTry: \n\n   export "
                              "PYTHONPATH=$PYTHONPATH:./src\n");
   }
-  std::cout << "555" << std::endl;
+  std::cout << "5) pClass: " << pClass << std::endl;
   // Create an instance of the class
   if (PyCallable_Check(pClass)) {
-  std::cout << "666" << std::endl;
+  std::cout << "6) callable.." << std::endl;
+
+      try {
     pInstance = PyObject_CallObject(pClass, nullptr);
+      } catch (const std::exception& ex)
+      {
+  std::cout << "Error: " << ex.what() << std::endl;
+      }
+  std::cout << "7) No error" << std::endl;
     if (PyErr_Occurred())
+    {
+  std::cout << "errrr" << std::endl;
       PyErr_Print();
+
+    }
     PyObject *dt = Py_BuildValue("f", timeStep); // Create tuple of arguments for initialization
     PyObject *pFuncName = Py_BuildValue("s", "set_timestep");
+  std::cout << "Calling " << pFuncName << std::endl;
     //pInstance = PyObject_CallMethod(pInstance, "set_timestep", "(f)", timeStep);
-    PyObject_CallMethodObjArgs(pInstance, pFuncName, dt, nullptr);
 
-  std::cout << "777" << std::endl;
+      try {
+    PyObject *output = PyObject_CallMethodObjArgs(pInstance, pFuncName, dt, nullptr);
+        std::cout << "Here's the output: " << output << std::endl;
+
+      } catch (const std::exception& ex)
+      {
+  std::cout << "Error: " << ex.what() << std::endl;
+      }
+
+  std::cout << "8) Good..." << std::endl;
     if (PyErr_Occurred())
       PyErr_Print();
     Py_DECREF(dt);
