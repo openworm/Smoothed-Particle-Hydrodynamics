@@ -319,7 +319,7 @@ def run(a=None,**kwargs):
         #command = 'nrnivmodl .'
         announce("Compiling NMODL files for NEURON...")
         try:
-            pynml.execute_command_in_dir_with_realtime_output(command, run_dir, prefix="nrnivmodl: ")
+            pynml.execute_command_in_dir_with_realtime_output(command, run_dir, prefix="nrnivmodl >> ")
         except KeyboardInterrupt:
             print_("\nCaught CTRL+C\n")
             sys.exit()
@@ -328,18 +328,19 @@ def run(a=None,**kwargs):
 
     env = { "DISPLAY": os.environ.get('DISPLAY') if os.environ.get('DISPLAY') is not None else '',
             "XAUTHORITY": os.environ.get('XAUTHORITY') if os.environ.get('XAUTHORITY') is not None else '',
-            "PYTHONPATH": ".:%s:%s" % (os.environ.get('PYTHONPATH', '.'), os.path.abspath(sim_dir))}
+            "PYTHONPATH": ".:%s" % (os.path.abspath(sim_dir))}
 
     sim_start = time.time()
 
     reportj = {}
 
     SUCCESS = 'Completed successfully'
-    completion_status = SUCCESS
+    completion_status = 'Not completed'
 
     announce("Executing main Sibernetic simulation of %sms using: \n\n    %s \n\n  in %s with %s"%(a.duration, command, run_dir, env))
     try:
-        pynml.execute_command_in_dir_with_realtime_output(command, run_dir, prefix="Sibernetic: ", env=env, verbose=True)
+        pynml_success = pynml.execute_command_in_dir_with_realtime_output(command, run_dir, prefix="Sibernetic >> ", env=env, verbose=True)
+        completion_status = SUCCESS if pynml_success else 'Failure running command: %s'%command
     except KeyboardInterrupt:
         print_("\nCaught CTRL+C. Continue...\n")
         completion_status = 'Caught CTRL+C'
