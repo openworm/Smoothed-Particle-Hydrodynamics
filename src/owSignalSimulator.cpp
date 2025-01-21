@@ -76,25 +76,32 @@ SignalSimulator::SignalSimulator(const std::string &simFileName,
     const char *s2 = Py_GetPath();
   #endif
 
-  printf("[debug] PyPath = \"%s\"\n", s2);
+  printf("[debug] The PythonPath = \"%s\"\n", s2);
 
   // Import the file as a Python module.
   pModule = PyImport_Import(pName);
+  std::cout << "1111" << std::endl;
   if (PyErr_Occurred())
     PyErr_Print();
 
+  std::cout << "222" << std::endl;
   // Build the name of a callable class
   if (pModule != nullptr) {
+  std::cout << "333" << std::endl;
     pClass = PyObject_GetAttrString(pModule, simClassName.c_str());
     if (PyErr_Occurred())
       PyErr_Print();
   } else {
+
+  std::cout << "444" << std::endl;
     throw std::runtime_error("Python module not loaded, have you set "
                              "PYTHONPATH?\nTry: \n\n   export "
                              "PYTHONPATH=$PYTHONPATH:./src\n");
   }
+  std::cout << "555" << std::endl;
   // Create an instance of the class
   if (PyCallable_Check(pClass)) {
+  std::cout << "666" << std::endl;
     pInstance = PyObject_CallObject(pClass, nullptr);
     if (PyErr_Occurred())
       PyErr_Print();
@@ -102,6 +109,8 @@ SignalSimulator::SignalSimulator(const std::string &simFileName,
     PyObject *pFuncName = Py_BuildValue("s", "set_timestep");
     //pInstance = PyObject_CallMethod(pInstance, "set_timestep", "(f)", timeStep);
     PyObject_CallMethodObjArgs(pInstance, pFuncName, dt, nullptr);
+
+  std::cout << "777" << std::endl;
     if (PyErr_Occurred())
       PyErr_Print();
     Py_DECREF(dt);
@@ -113,6 +122,8 @@ SignalSimulator::SignalSimulator(const std::string &simFileName,
                              "callable! Try: export "
                              "PYTHONPATH=$PYTHONPATH:./src");
   }
+
+  std::cout << "999" << std::endl;
 }
 
 std::vector<float> SignalSimulator::run() {
