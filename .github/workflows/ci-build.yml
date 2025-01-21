@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runs-on: [ ubuntu-latest, ubuntu-20.04, ubuntu-24.04 ]
+        runs-on: [ ubuntu-20.04, ubuntu-22.04, ubuntu-24.04 ]
 
     steps:
     - name: Set git to use LF
@@ -87,6 +87,9 @@ jobs:
 
     - name: Run tests
       run: |
+        # Install specific branch of pyNeuroML
+        pip install git+https://github.com/NeuroML/pyNeuroML.git@experimental
+
         pip install c302
         pip install neuron
         pip list
