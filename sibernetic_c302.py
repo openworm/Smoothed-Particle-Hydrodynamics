@@ -9,7 +9,7 @@ import math
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-script_version = '0.1.7' # This will change at different rate to C++ code...
+script_version = '0.1.8' # This will change at different rate to C++ code...
 
 DEFAULTS = {'duration': 2.0,
             'dt': 0.005,
@@ -412,7 +412,7 @@ def run(a=None,**kwargs):
 
     if not a.noc302 and successful:
 
-        announce("Generating images for neuronal activity...")
+        announce("Generating images for neuronal activity (via %s in %s)..."%(lems_file, sim_dir))
 
         results = pynml.reload_saved_data(lems_file,
                           base_dir=sim_dir,

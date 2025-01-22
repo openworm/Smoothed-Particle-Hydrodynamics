@@ -164,7 +164,7 @@ class C302NRNSimulation():
 
     def set_timestep(self, dt):
 
-        print('Setting timestep...')
+        print('Setting timestep to %s...'%dt)
 
         dt = float('{:0.1e}'.format(dt)) * 1000.0 # memory issue fix
         
@@ -173,12 +173,10 @@ class C302NRNSimulation():
             import neuron
             self.h = neuron.h
         except Exception as e:
-            return 'Python import error: %s..'%e 
+            raise Exception('Python import error in C302NRNSimulation: %s..'%e)
 
         self.ns = NeuronSimulation(self.tstop, dt)
         print_("Initialised C302NRNSimulation of length %s ms and dt = %s ms..."%(self.tstop,dt))
-
-        return 'Success...' # for debugging... 
 
 
     def save_results(self):

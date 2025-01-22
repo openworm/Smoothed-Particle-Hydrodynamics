@@ -45,7 +45,7 @@ bool load_to = false;
 bool skip_display_particles = false;
 bool skip_display_membranes = false;
 bool skip_display_connections = false;
-std::string version = "0.0.7";
+std::string version = "0.0.8";
 
 int usage() {
   std::cout

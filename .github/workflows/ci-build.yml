@@ -87,15 +87,17 @@ jobs:
 
     - name: Run tests
       run: |
-        # Install specific branch of pyNeuroML
-        pip install git+https://github.com/NeuroML/pyNeuroML.git@experimental
-
         pip install c302
         pip install neuron
         pip list
         which nrniv
         export NEURON_HOME=/home/runner/.local
         ./run_all_tests.sh 
+
+    - name: Generated file info
+      run: |
+        
+        ls -alt  simulations/*
 
     - name: Final version info
       run: |
