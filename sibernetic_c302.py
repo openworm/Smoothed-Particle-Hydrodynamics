@@ -367,6 +367,7 @@ def run(a=None,**kwargs):
     reportj['sibernetic_c302_version'] = script_version
     import platform
     reportj['python_version'] = platform.python_version()
+    reportj['os_version'] = ', '.join(platform.uname())
 
     if not a.noc302:
         reportj['reference'] = a.reference
