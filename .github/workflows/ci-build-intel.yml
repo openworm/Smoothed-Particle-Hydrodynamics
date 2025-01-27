@@ -47,7 +47,8 @@ jobs:
         sudo rm -r intel-opencl-tmp
 
         sudo cp -R /opt/intel/opencl/include/CL /usr/include/
-        sudo apt install -y ocl-icd-opencl-dev vim --fix-missing
+        sudo apt-get update --fix-missing 
+        sudo apt install -y ocl-icd-opencl-dev vim
 
         echo "OpenCL Driver Installation Complete"
 
